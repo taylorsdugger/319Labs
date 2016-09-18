@@ -1,0 +1,35 @@
+<script type='text/javascript' src='https://www.gstatic.com/charts/loader.js'></script>
+
+<script type='text/javascript'>
+
+  window.onload = function(){
+      drawMap();
+  };
+
+  google.charts.load('upcoming', {'packages': ['geomap']});
+  google.charts.setOnLoadCallback(drawMap);
+
+   function drawMap() {
+     var data = google.visualization.arrayToDataTable([
+       ['Address'],
+       [localStorage.address]
+     ]);
+
+     var options = {};
+     options['region'] = 'US';
+     options['colors'] = [0xFF8747, 0xFFB581, 0xc06000]; //orange colors
+     options['dataMode'] = 'markers';
+     options['showLegend'] = false;
+
+     var container = document.getElementById('map_canvas');
+     var geomap = new google.visualization.GeoMap(container);
+     geomap.draw(data, options);
+   };
+</script>
+
+<title>Map</title>
+<h1>Map</h1>
+
+<body>
+   <div id='map_canvas'></div>
+</body>
