@@ -66,8 +66,8 @@ function validation(){
      }// end if phone.length != 10
   }// end if phone.length != 10 && phone.length != 12
 
+  // check validity of address field
   state = address.substring(address.lastIndexOf(',')+1).trim();
-
   if(!address.includes(",") || state.length != 2 || address == '' || /[^a-zA-Z0-9]/.test( address.replace(/,/g, "") )){
       // invalid address
       document.getElementById('address_wrong').style.display = "block";

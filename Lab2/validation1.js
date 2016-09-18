@@ -7,6 +7,7 @@ function validation(){
   state = document.getElementById('state').value;
   all_inputs_valid = true;
 
+  // check validity of first name
   if( /[^a-zA-Z0-9]/.test( first_name ) || first_name == '') {
 	     // invalid first name
        document.getElementById('first_name_wrong').style.display = "block";
@@ -18,6 +19,7 @@ function validation(){
        document.getElementById('first_name_wrong').style.display = "none";
   }// end if testing for alphanumeric in first_name
 
+  // check validity of last name
   if( /[^a-zA-Z0-9]/.test( last_name ) || last_name == '') {
 	     // invalid last name
        document.getElementById('last_name_wrong').style.display = "block";
@@ -29,6 +31,7 @@ function validation(){
        document.getElementById('last_name_wrong').style.display = "none";
   }// end if checking for alphanumeric in last_name
 
+  // check validity of gender
   if(gender == '') {
 	     // no gender
        document.getElementById('gender_wrong').style.display = "block";
@@ -40,6 +43,7 @@ function validation(){
        document.getElementById('gender_wrong').style.display = "none";
   }// end if they entered a gender
 
+  // check validity of state
   if(state == '') {
 	     // no state
        document.getElementById('state_wrong').style.display = "block";
@@ -69,21 +73,3 @@ function validation(){
 function setCookie(cname, cvalue){
   document.cookie = cname + "=" + cvalue + ";";
 }// end function used for setting a cookie
-
-function getCookie(cname) {
-    var name = cname + "=";
-    var ca = document.cookie.split(';');
-    for(var i = 0; i < ca.length; i++) {
-        var c = ca[i];
-
-        while (c.charAt(0) == ' ') {
-            c = c.substring(1);
-        }// end while loop removing spaces
-
-        if (c.indexOf(name) == 0) {
-            return c.substring(name.length, c.length);
-        }// end if we found the cookie, return
-
-    }// end for loop over cookies
-    return "";
-}// end function used for getting a cookie using the cookies name
