@@ -1,14 +1,48 @@
-<html>
-<script src="validation1.js"></script>
+<script src="validation2.js"></script>
 <title>Contact Information</title>
 <h1>Contact Information</h1>
 
-<p id="current_cookie"></p>
+<form id="form" onsubmit="validation(); return false;">
+<table width="35%">
 
-<script>
-window.onload = function(){
-  document.getElementById('current_cookie').innerHTML = "Current Cookie: " + document.cookie;
-};
-</script>
+<tr>
+<td><label for="email">Email: </label></td>
+<td><input type="text" id="email"></td>
+<td>
+<img style="display:none" id="email_correct" src="correct.png">
+<img style="display:none" id="email_wrong" src="wrong.png">
+</td>
+</tr>
 
-</html>
+<tr><td>&nbsp;</td></tr>
+
+<tr>
+<td><label for="phone">Phone: </label></td>
+<td><input type="text" id="phone"></td>
+<td>
+<img style="display:none" id="phone_correct" src="correct.png">
+<img style="display:none" id="phone_wrong" src="wrong.png">
+</td>
+</tr>
+
+<tr>
+<td>&nbsp;</td>
+</tr>
+
+<tr>
+<td><label for="address">Address: </label></td>
+<td><input type="text" id="address"> </td>
+<td>
+<img style="display:none" id="address_correct" src="correct.png">
+<img style="display:none" id="address_wrong" src="wrong.png">
+</td>
+
+<tr>
+<td>&nbsp;</td>
+</tr>
+
+<tr>
+<td><input type="submit" value="Submit"></td>
+</tr>
+
+</form>
