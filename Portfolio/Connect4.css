@@ -10,8 +10,20 @@
   background-size:100% 100%;
 }
 
+.yellow_display {
+  background:url("board_display_yellow.png");
+  background-repeat:no-repeat;
+  background-size:100% 100%;
+}
+
 .red{
   background:url("board_piece_red.png");
+  background-repeat:no-repeat;
+  background-size:100% 100%;
+}
+
+.red_display{
+  background:url("board_display_red.png");
   background-repeat:no-repeat;
   background-size:100% 100%;
 }
@@ -21,10 +33,9 @@
     width:200px;
 }
 
-table {
+.table {
   width: 80%;
   margin: 1em auto;
-  border:3px solid #000;
   table-layout: fixed;
   text-align: center;
   background-repeat:no-repeat;

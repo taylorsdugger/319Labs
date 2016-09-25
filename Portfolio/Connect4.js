@@ -3,11 +3,13 @@ var Game = {
   rows: 6,
   columns: 7,
   board: 0,
+  game_over: false,
 
   init_board : function() {
     // initializes the board by setting all elements in array to 0
     this.board = new Array();
     this.current_player_color = 1; // make sure the current player starts as yellow
+    this.game_over = false;
 
     for (i = 0; i < this.rows; i++) {
         this.board[i] = new Array();
@@ -46,8 +48,11 @@ var Game = {
     // for each table cell element, attach a click listener for dropping tokens
     $("td").each(function() {
         var id = $(this).attr("id");
+        // onclick listener
         var board_piece = document.getElementById(id);
         board_piece.addEventListener("click", drop_token);
+        // mouseover listener for over-top token display
+        board_piece.addEventListener("mouseover", top_display);
     }); // end of each function over all td elements
 
     // attach a listener to our reset button to restart the game
@@ -78,12 +83,60 @@ var Game = {
         }// end for loop over columns
     }// end for loop over rows
     return true;
-  }// end of function for determing if the board is full
+  },// end of function for determing if the board is full
 
+  check_win : function(n){
+      // n is the color to check, either 1 for yellow or 2 for red
+      // we only need to check for directions right, up, diagonal up-left, and diagonal up-right
+      win = false;
+      for(i = 0; i < this.rows; i++){
+
+          for(j = 0; j < this.columns; j++){
+            // check if we have a win right
+            if(j+3 > this.columns-1){}
+
+            else if(this.board[i][j] == n && this.board[i][j+1] == n && this.board[i][j+2] == n && this.board[i][j+3] == n){
+              win = true;
+              this.game_over = true;
+            }// end if we have a winner for direction = right
+
+            // check if we have a win up
+            if(i+3 > this.rows-1){}
+
+            else if(this.board[i][j] == n && this.board[i+1][j] == n && this.board[i+2][j] == n && this.board[i+3][j] == n){
+              win = true;
+              this.game_over = true;
+            }// end if we have a winner for direction = up
+
+            // check if we have a up-left
+            if(i+3 > this.rows-1 || j+3 > this.columns-1){}
+
+            else if(this.board[i][j] == n && this.board[i+1][j+1] == n && this.board[i+2][j+2] == n && this.board[i+3][j+3] == n){
+              win = true;
+              this.game_over = true;
+            }// end if we have a winner for direction = up-right
+
+            // check if we have a up-right
+            if(i+3 > this.rows-1 || j-3 < 0){}
+
+            else if(this.board[i][j] == n && this.board[i+1][j-1] == n && this.board[i+2][j-2] == n && this.board[i+3][j-3] == n){
+              win = true;
+              this.game_over = true;
+            }// end if we have a winner for direction = up-right
+
+          }// end for loop over columns
+      }// end for loop over rows
+      return win;
+  }// end of function for checking if there is a win
 };// end of object Game
 
 function drop_token(){
+
    // drop a token in the correct position based on which click listener has been triggered
+   if(Game.game_over){
+     return;
+   }// do nothing if the game is over and this function is called
+
    column = this.id.substring(1);
 
    // find which row we can put this piece in
@@ -120,6 +173,13 @@ function drop_token(){
          Game.board[row][column] = Game.current_player_color;
          Game.toggle_player_turn();
          Game.draw_board();
+         top_display();
+
+         if(Game.check_win(1)){
+            document.getElementById('game_text').innerHTML = "Yellow has won the game! Click 'Restart' to begin a new game.";
+         }else if(Game.check_win(2)){
+           document.getElementById('game_text').innerHTML = "Red has won the game! Click 'Restart' to begin a new game.";
+         }// end if we are checking for a winner
 
          if(Game.board_is_full()){
             document.getElementById('game_text').innerHTML = "Game has ended in a tie! Click 'Restart' to begin a new game.";
@@ -130,6 +190,20 @@ function drop_token(){
      i++;
    })(-1); // end of animate function for token animation
 }// end function for dropping tokens, event listener for each table cell
+
+function top_display(){
+   for(i = 0; i < Game.columns; i++){
+      document.getElementById("h" + i).className = "";
+   }// end for loop resetting all top display views
+
+   column = this.id.substring(1);
+   id = "h" + column;
+   if(Game.current_player_color == 1){
+      document.getElementById(id).className = "yellow_display";
+   }else{
+     document.getElementById(id).className = "red_display";
+   }// end if selecting the player color for mouseover
+}// end function for displaying tokens on top of the board
 
 Game.init_board();
 Game.draw_board();
