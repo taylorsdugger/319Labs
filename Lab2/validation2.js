@@ -68,7 +68,9 @@ function validation(){
 
   // check validity of address field
   state = address.substring(address.lastIndexOf(',')+1).trim();
-  if(!address.includes(",") || state.length != 2 || address == '' || /[^a-zA-Z0-9]/.test( address.replace(/,/g, "") )){
+  address_trimmed = address.replace(/s\g, '');
+  		
+  if(!address.includes(",") || state.length != 2 || address == '' || /[^a-zA-Z0-9]/.test( address_trimmed.replace(/,/g, "") )){
       // invalid address
       document.getElementById('address_wrong').style.display = "block";
       document.getElementById('address_correct').style.display = "none";
