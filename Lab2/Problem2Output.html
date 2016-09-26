@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Snake</title>
+</head>
+<body onload="start()">
+
+<canvas id="myCanvas" width="500" height="500" style="border:1px solid #d3d3d3;">
+    Your browser does not support the HTML5 canvas tag.</canvas>
+<script>
+
+    var f;
+    var l;
+    var r;
+    var curX = 0;
+    var curY = 250;
+    var c = document.getElementById("myCanvas");
+    var ctx = c.getContext("2d");
+
+    function start() {
+        f = setInterval(forward,1000);
+    }
+
+    function forward() {
+        ctx.moveTo(curX, curY);
+        ctx.lineTo(curX +=20, curY);
+        ctx.stroke();
+    }
+
+    function stop() {
+        clearInterval(f);
+        clearInterval(l);
+        clearInterval(r);
+    }
+
+    function left() {
+        clearInterval(f);
+        clearInterval(r);
+
+        l = setInterval(leftOn, 1000);
+    }
+
+    function leftOn() {
+        ctx.moveTo(curX, curY);
+        ctx.lineTo(curX +=20, curY);
+        ctx.stroke();
+    }
+
+    function right() {
+        clearInterval(f);
+        clearInterval(l);
+
+        r = setInterval(rightOn, 1000);
+    }
+
+    function rightOn() {
+        ctx.moveTo(curX, curY);
+        ctx.lineTo(curX , curY+=20);
+        ctx.stroke();
+    }
+
+</script>
+<br>
+<button onclick="stop()">STOP</button>
+<button onclick="left()">LEFT</button>
+<button onclick="right()">RIGHT</button>
+</body>
+</html>
