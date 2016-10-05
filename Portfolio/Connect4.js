@@ -3,7 +3,7 @@ Game = {
   rows: 6,
   columns: 7,
   board: 0,
-  game_over: false,
+  game_over: false
 
   init_board : function() {
     // initializes the board by setting all elements in array to 0
@@ -195,6 +195,7 @@ function drop_token(){
 
    // drop a token in the correct position based on which click listener has been triggered
    if(Game.game_over){
+	 // dont drop a token if we are currently dropping or if the game is over
      return;
    }// do nothing if the game is over and this function is called
 
@@ -225,7 +226,7 @@ function drop_token(){
            // the color will be reset back to empty
            Game.board[i][column] = 0;
            Game.draw_board();
-         }, 20);
+         }, 40);
          // recurse setting timeout functions until we reach the final row
          animate(i);
        }else{
@@ -246,7 +247,7 @@ function drop_token(){
             document.getElementById('game_text').innerHTML = "Game has ended in a tie! Click 'Restart' to begin a new game.";
          }// board is full and nobody won, game is a tie
        }// end if we've reached the last row
-     }, 20);// end timeout function for animating the chip falling
+     }, 40);// end timeout function for animating the chip falling
 
      i++;
    })(-1); // end of animate function for token animation
@@ -257,8 +258,8 @@ function top_display(){
       document.getElementById("h" + i).className = "";
    }// end for loop resetting all top display views
 
-   column = this.id.substring(1);
-   id = "h" + column;
+   col = this.id.substring(1);
+   id = "h" + col;
    if(Game.current_player_color == 1){
       document.getElementById(id).className = "yellow_display";
    }else{
