@@ -7,7 +7,7 @@ answer : 0,
 memory : 0, 
 operator : "",
 hit_equals : false,
-binary : false,
+base: 10,
 
 View : {
   textRow : {id: "textRow", type: "text", value: "", onclick:""},
@@ -33,11 +33,10 @@ View : {
   button_mem_add : {id: "button_mem_add", type: "button", value: "M+", onclick:"Calc.memory += parseFloat(document.getElementById('textRow').value);"},
   button_mem_clear : {id: "button_mem_clear", type: "button", value: "MC", onclick:"Calc.memory = 0;"},
   button_not : {id: "button_not", type: "button", value: "~", onclick:"Calc.operation('~');"},
-  button_mod : {id: "button_mod", type: "button", value: "%", onclick:""},
-  button_rshift : {id: "button_rshift", type: "button", value: ">>", onclick:""},
-  button_lshift : {id: "button_lshift", type: "button", value: "<<", onclick:""},
-  button_and : {id: "button_and", type: "button", value: "&", onclick:""},
-  button_or : {id: "button_or", type: "button", value: "|", onclick:""}
+  button_rshift : {id: "button_rshift", type: "button", value: ">>", onclick:"Calc.operation('>>');"},
+  button_lshift : {id: "button_lshift", type: "button", value: "<<", onclick:"Calc.operation('<<');"},
+  button_and : {id: "button_and", type: "button", value: "&", onclick:"Calc.operation('&');"},
+  button_or : {id: "button_or", type: "button", value: "|", onclick:"Calc.operation('|');"}
 },// end of view 
 
 displayElement : function (element) {
@@ -95,6 +94,7 @@ display_decimal : function() {
   s += "</tr>";
 
   s += "</table>";
+  Calc.base = 10;
   return s;
 },// end of display_decimal function
 
@@ -110,32 +110,31 @@ display_binary : function() {
   s += "</tr>";
   s += "<tr>";
   s += Calc.displayElement(Calc.View.button_add);
-  s += Calc.displayElement(Calc.View.button_mod);
   s += Calc.displayElement(Calc.View.button_lshift);
+  s += Calc.displayElement(Calc.View.button_rshift);
   s += "</tr>";
   s += "<tr>";
-  s += Calc.displayElement(Calc.View.button_rshift);
   s += Calc.displayElement(Calc.View.button_sub);
   s += Calc.displayElement(Calc.View.button_and);
+  s += Calc.displayElement(Calc.View.button_or);
   s += "</tr>";
   s += "<tr>";
-  s += Calc.displayElement(Calc.View.button_or);
+  s += Calc.displayElement(Calc.View.button_mem_show);
   s += Calc.displayElement(Calc.View.button_mul);
   s += Calc.displayElement(Calc.View.button_div);
   s += "</tr>";
   s += "<tr>";
-  s += Calc.displayElement(Calc.View.button_mem_show);
+  s += Calc.displayElement(Calc.View.button_clear);
   s += Calc.displayElement(Calc.View.button_mem_sub);
   s += Calc.displayElement(Calc.View.button_mem_add);
   s += "</tr>";
   s += "<tr>";
-  s += Calc.displayElement(Calc.View.button_clear);
   s += Calc.displayElement(Calc.View.button_mem_clear);
   s += Calc.displayElement(Calc.View.button_eq);
   s += "</tr>";
   
   s += "</table>";
-  Calc.binary = true;
+  Calc.base = 2;
   return s;
 },
 
@@ -153,25 +152,53 @@ clear : function(){
 },// end of clear function
 
 operation : function(op){
-	Calc.answer = parseFloat(document.getElementById('textRow').value);
+	
+	if(Calc.base == 10){
+		Calc.answer = parseFloat(document.getElementById('textRow').value);
+	}else{
+		Calc.answer = parseInt(document.getElementById('textRow').value, Calc.base);
+	}// end if we are in base 10 or binary
+	
+	if(op == '~'){
+		Calc.answer = eval(op + Calc.answer);
+		document.getElementById('textRow').value = dec_to_binary(Calc.answer);
+		return;
+	}// end if operator == '~'
+	
 	Calc.clear();
 	Calc.operator = op;
 	Calc.hit_equals = false;
 },// end of operation function
 
 equals : function(){
-	var op = parseFloat(document.getElementById('textRow').value); // second operand in calculation (answer <operator> op)
+	
+	if(Calc.base == 10){
+		var op = parseFloat(document.getElementById('textRow').value);
+	}else{
+		var op = parseInt(document.getElementById('textRow').value, Calc.base);
+	}// end if we are in base 10 or binary
 	
 	if(Calc.hit_equals){
 		// theyve hit equals before, perform operation on stored operand
-		op = this.operand;
+		op = Calc.operand;
 	}else{
 		// they havent hit equals, store the operand for operation later
 		Calc.operand = op;
 	}// end if hitting equals more than once, perform same operation on same operand
-
-	Calc.answer = document.getElementById('textRow').value = eval(Calc.answer + Calc.operator + op);
+	
+	Calc.answer = eval(Calc.answer + Calc.operator + op);
+	
+	if(Calc.base == 10){
+		document.getElementById('textRow').value = Calc.answer;
+	}else{
+		document.getElementById('textRow').value = dec_to_binary(Calc.answer);
+	}// end if we are in base 10 or base 2
+	
 	Calc.hit_equals = true;
 }// end of equals function
 
 } // end of Calc;
+
+function dec_to_binary(dec){
+    return (dec >>> 0).toString(2);
+}// end function for converting decimals to binary strings
