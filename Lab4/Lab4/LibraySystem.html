@@ -1,0 +1,24 @@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"
+        xmlns:Name="http://www.w3.org/1999/xhtml"></script>
+
+<title>Please Login</title>
+<h1>Library System</h1>
+
+    <form id ="form" onsubmit="createTable(); return false;">
+        User Name:<br>
+        <input type="text" name="username" required><br>
+        Password:<br>
+        <input type="text" name="password" required><br><br>
+        <input type="submit" value="Submit">
+    </form>
+
+<table id = "table" style = "width:100%" >
+    <tr>
+        <th>Shelf Literature</th>
+        <th>Shelf Science</th>
+        <th>Shelf Sport</th>
+        <th>Shelf Art</th>
+    </tr>
+</table>
+
+<script src="booksLibrary.js"></script>
