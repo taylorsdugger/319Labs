@@ -306,8 +306,11 @@ function changeUser(){
 }// end changeUser function
 
 function displayPrompt(category){
-
-	var id = prompt('Enter book id: ', 'BookID');
+	var id = '';
+	
+	while(id == '' || id == null){
+		id = prompt('Enter book id: ', 'BookID');
+	}
 	
 	if(getBookByID('B' + id) == false){
 		var b = new Book(id, 'B', category);
