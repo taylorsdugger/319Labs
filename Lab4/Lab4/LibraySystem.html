@@ -4,21 +4,18 @@
 <title>Please Login</title>
 <h1>Library System</h1>
 
-    <form id ="form" onsubmit="createTable(); return false;">
+<div id="login-form">
+    <form onsubmit="displayTable(); return false;">
         User Name:<br>
-        <input type="text" name="username" required><br>
+        <input id="username" type="text" name="username" required><br>
         Password:<br>
-        <input type="text" name="password" required><br><br>
+        <input id="password" type="text" name="password" required><br><br>
         <input type="submit" value="Submit">
     </form>
+</div>
 
-<table id = "table" style = "width:100%" >
-    <tr>
-        <th>Shelf Literature</th>
-        <th>Shelf Science</th>
-        <th>Shelf Sport</th>
-        <th>Shelf Art</th>
-    </tr>
-</table>
+<div id="table"></div>
+<br>
+<a href="#" id="change_user" onclick="changeUser();">Change User</p>
 
 <script src="booksLibrary.js"></script>
