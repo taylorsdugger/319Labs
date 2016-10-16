@@ -308,8 +308,12 @@ function changeUser(){
 function displayPrompt(category){
 	var id = '';
 	
-	while(id == '' || id == null){
+	while(id == ''){
 		id = prompt('Enter book id: ', 'BookID');
+		
+		if(id == null){
+			return;
+		}
 	}
 	
 	if(getBookByID('B' + id) == false){
