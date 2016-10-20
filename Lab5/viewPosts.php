@@ -21,7 +21,6 @@ if(file_exists($file_name)){
 	$posts_text = '';
 }// end if the file exists
 
-file_put_contents($file_name, $posts_text);
 
 #######################
 ####  HTML SECTION ####
