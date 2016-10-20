@@ -21,7 +21,6 @@ if(file_exists($file_name)){
 	$posts_text = '';
 }// end if the file exists
 
-
 #######################
 ####  HTML SECTION ####
 #######################
@@ -61,9 +60,15 @@ $( document ).ready(function() {
 		width: 300,
 		height: 225,
 		buttons: {
-			"Ok": function() {
-				updatePosts();
-				$(this).dialog("close");
+			"Post": function() {
+				
+				if($('#post_content').val() == ''){
+					alert('Post content cannot be blank');
+				}else{
+					updatePosts();
+					$(this).dialog("close");
+				}
+				
 			},
 			"Cancel": function() {
 				$(this).dialog("close");
@@ -77,7 +82,8 @@ $('#button').click(function() {
 });
 
 function updatePosts(){
-	var post_content = $('#post_content').val();
+	
+	var post_content = $('#post_content').val();	
 	var username = "<?=$username?>";
 	var today = new Date();
 	

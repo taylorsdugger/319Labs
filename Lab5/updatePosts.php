@@ -40,7 +40,7 @@ if($ajax_action == 'update'){
 		file_put_contents ($file_name, $file_contents);
 		fclose($users_file);
 	}else{
-		file_put_contents($file_name, json_encode($new_post_data));
+		file_put_contents($file_name, json_encode($new_post_data) . "\n");
 	}// end if we have a users file
 
 	exit;
