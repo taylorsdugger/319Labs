@@ -9,7 +9,7 @@ set_include_path(get_include_path() . PATH_SEPARATOR . $path);
 include_once('Crypt/RSA.php');
 
 #######################
-####### POST-FORM #####
+###  PHP POST-FORM   ##
 #######################
 
 $file_name = 'users.txt';
@@ -21,24 +21,12 @@ if($action == 'add_user'){
 	$username =  get_value('username');
 	$password = get_value('password');
 	
-	// configure the 16-bit RSA encryption
+	// configure the 16-bit RSA encryption and grab our keys
 	$rsa = new Crypt_RSA();
 	$rsa->setPrivateKeyFormat(CRYPT_RSA_PRIVATE_FORMAT_PKCS1);
 	$rsa->setPublicKeyFormat(CRYPT_RSA_PUBLIC_FORMAT_PKCS1);
 	extract($rsa->createKey(16));
 	
-	// remove first and last lines from private key
-	$private_key = explode("\n", $privatekey);
-	array_shift($private_key);
-	array_pop($private_key);
-	$private_key = implode("\n", $private_key);
-	
-	// remove first and last lines from public key
-	$public_key = explode("\n", $publickey);
-	array_shift($public_key);
-	array_pop($public_key);
-	$public_key = implode("\n", $public_key);
-
 	if(file_exists($file_name)){
 		// file exists, grab contents so we can rewrite
 		$user_text = file_get_contents($file_name);
@@ -47,11 +35,23 @@ if($action == 'add_user'){
 		$user_text = '';
 	}// end if the file exists
 	
+	// store all of our data in a php array
+	$user_data = array();
+	$user_data[] = $username;
+	$user_data[] = $password;
+	$user_data[] = $publickey;
+	$user_data[] = $privatekey;
+	
+	// json encode the data before we store in our .txt file
+	$user_text .= json_encode($user_data) . "\n";
+	
 	// write the user to our user file
 	$users_file = fopen($file_name, "w");
-	$user_text .= $username . ':' . $password . ':' . $public_key . ':' . $private_key . "\n";
 	fwrite($users_file, $user_text);
-	$success = fclose($users_file);
+	fclose($users_file);
+	
+	// redirect to the login page
+	header('Location: login.html');
 }// end if $action == 'data'
 
 #######################
@@ -62,12 +62,6 @@ if($action == 'add_user'){
 
 <title>Signup - Welcome</title>
 <h1>Registration Form</h1>
-
-<?php
-	if($success){
-		echo "<strong>User " . $username . " successfully created, you may now login.</strong><br><br>";
-	}// end if we had success, show the success message
-?>
 
 <form method="POST" action="<?=$_SERVER['PHP_SELF']?>">
 <input  type="hidden" name="action" value="add_user">
