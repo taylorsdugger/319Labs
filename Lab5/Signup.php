@@ -84,4 +84,4 @@ if($action == 'add_user'){
 </form>
 <br>
 <br>
-<p>Already signed up? <a href="login.html">Click here</a> to login.
+Already signed up? <a href="login.html">Click here</a> to login.
