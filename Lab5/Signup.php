@@ -80,4 +80,8 @@ if($action == 'add_user'){
 <tr>
 	<td><input type="submit" name="submit" value="Sign Up"></td>
 </tr>
+</table>
 </form>
+<br>
+<br>
+<p>Already signed up? <a href="login.html">Click here</a> to login.
