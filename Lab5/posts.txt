@@ -1,1 +1,2 @@
-{"username":"admin","title":"new post","content":"hey<br>","date":"1477081326","id":"1"}
+{"username":"joe","title":"test","content":"editing a post","date":"1477157459","id":"1"}
+{"username":"joe","title":"creating a new post","content":"hello","date":"1477157466","id":2}

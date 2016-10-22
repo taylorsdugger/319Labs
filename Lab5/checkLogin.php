@@ -11,9 +11,13 @@ if($ajax_action == 'check'){
 	$password = get_value('password');
 	$has_access = false;
 	
-	// begin reading from users file
-	$users_file = fopen($file_name, "r");
+	if(file_exists($file_name)){
+		$users_file = fopen($file_name, "r");
+	}else{
+		$users_file = false;
+	}// end if file exists
 	
+	// begin reading from users file
 	if ($users_file) {
 		// we have a users file
 		while (($line = fgets($users_file)) !== false) {

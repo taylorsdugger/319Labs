@@ -1,5 +1,8 @@
 <?php
 session_start();
+#######################
+###   PHP/AJAX      ###
+#######################
 date_default_timezone_set('America/Chicago');
 include_once('Shared_Functions.php');
 date_default_timezone_set(date_default_timezone_get());
@@ -8,7 +11,6 @@ ini_set('date.timezone', date_default_timezone_get());
 $ajax_action = get_value('ajax_action');
 $file_name = "posts.txt";
 $new_post_data['username'] = $username = get_value('user');
-$session_user = get_value('user', $_SESSION);
 
 if($ajax_action == 'delete'){
 	// we recieved an ajax request for deleting a post
@@ -31,17 +33,26 @@ if($ajax_action == 'delete'){
 	unset($file_data[$index]);
 	$contents = implode("\n", $file_data);
 	file_put_contents($file_name, $contents);
-}// end if ajax action is delete, delete this line from our file
+	// update our $_SESSION id after the deletion
+	$_SESSION['id'] = get_max_id($file_name);
 
-if($ajax_action == 'update'){
+}else if($ajax_action == 'update'){
 	// we recieved an ajax request for updating posts, grab our request variables
 	$new_post_data['title'] = $title = get_value('title');
 	// replace any new lines in the content with <br/>, this is so we can use the new line
 	// character as a delimiter when reading from our file
-	$new_post_data['content'] = $content = str_replace("\n", "<br>", get_value('content'));
+	$new_post_data['content'] = $content = strip_tags(str_replace("\n", "<br>", get_value('content')), '<br>');
 	$new_post_data['date'] = $date = get_value('date');
-	$new_post_data['id'] = $id = get_value('id');
 	
+	if(get_value('id') === NULL){
+		// this is a create, update our session id (auto-incrementing key)
+		$_SESSION['id'] = get_max_id($file_name);
+		$new_post_data['id'] = $id = $_SESSION['id'];
+	}else{
+		// this is an edit, use the request id
+		$new_post_data['id'] = $id = get_value('id');
+	}// end if id is null
+		
 	$update = false;
 	$file_contents = '';
 	$posts_file = false;
@@ -77,13 +88,16 @@ if($ajax_action == 'update'){
 		file_put_contents ($file_name, $file_contents);
 		fclose($posts_file);
 	}else{
+		// creating a new file
 		file_put_contents($file_name, json_encode($new_post_data) . "\n");
 	}// end if we have a users file
+	
 }// end if ajax_action == 'update'
 
 if(!isset($file_contents) || $file_contents == ''){
 	
 	if(file_exists($file_name)){
+		// file exists grab the contents
 		$file_contents = file_get_contents($file_name);
 		
 		if($file_contents == ''){
@@ -108,7 +122,7 @@ foreach($file_data as $post){
 	// set up posts array
 	$post = json_decode($post, true);
 	
-	if(!isset($post['username'])){
+	if(!isset($post['id'])){
 		break;
 	}// end if we've reached the end of the file
 	
@@ -118,10 +132,13 @@ foreach($file_data as $post){
 // sort our array by most recent date
 usort($posts, 'date_cmp');
 
+#######################
+####  HTML SECTION ####
+#######################
 foreach($posts as $post){
 	// begin foreach loop over all our posts
 ?>
-	<table width="45%" border="1">
+	<table width="100%" border="1">
 	<thead>
 		<th id="<?= $post['id']?>_title"><?= $post['title'] ?></th>
 		<th id="<?= $post['id']?>_username">Posted by: <?= $post['username'] ?></th>
@@ -147,13 +164,46 @@ foreach($posts as $post){
 <?php		
 }// end foreach loop over all our posts creating the table
 
+#######################
+##   PHP FUNCTIONS   ## 
+#######################
 function date_cmp($a, $b){
+	// function for sorting by most recent date
 	if ($a['date'] == $b['date']) {
         return 0;
     }
     return ($a['date'] > $b['date']) ? -1 : 1;
 }// end function for comparing date values
 
+function get_max_id($file_name){
+	// function for getting the max id from the file, auto-increments so we don't
+	// create duplicate id records
+	if(file_exists($file_name)){
+		// file exists, grab contents so we can rewrite
+		$posts_text = file_get_contents($file_name);
+	} else {
+		// file doesnt exist, begin by creating a new file
+		$posts_text = '';
+	}// end if the file exists
+
+	$posts_data = explode("\n", $posts_text);
+	$id = 0;
+
+	foreach($posts_data as $post){
+		$post = json_decode($post, true);
+		
+		if(isset($post['id']) && $post['id'] >= $id){
+			$id = $post['id'] + 1;
+		}// end if find the highest id in the file
+	
+	}// end foreach loop for finding the highest id in the file
+	
+	return $id;
+}// end function for getting the max id from the posts array
+
+#######################
+####  JAVASCRIPT   ####
+#######################
 ?>
 <script id="ajax_js" type="text/javascript">
     $('.delete').click(function() {
@@ -166,16 +216,21 @@ function date_cmp($a, $b){
 	
 	$('.edit').click(function() {
 		id = this.id;
-
+		
 		var title = document.getElementById(id + '_title').innerHTML;
 		var content = document.getElementById(id + '_content').innerHTML;
 		var username = document.getElementById(id + '_username').innerHTML.substring(11);
 		
 		if(username == "<?= $_SESSION['user'] ?>"){
 			$('#post_title').val(title);
-			$('#post_content').val(content);
+			$('#post_content').val(content.substring(0, content.length-1));
 			$('#dialog-form').dialog('option', 'title', 'Edit a Post');
-			$( "#dialog-form" ).dialog( "open" );
+			
+			$('#title').html('Title:');
+			$('#content').html('Content:');
+			
+			 $('#ok').button('option', 'label', 'Save');
+			$("#dialog-form").data('action', 'edit').dialog("open");
 		}else{
 			alert("You cannot edit someone else's post.");
 		}	

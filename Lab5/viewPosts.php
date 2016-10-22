@@ -13,25 +13,9 @@ if($username === NULL){
 	exit;
 }// end if username is null, they havent logged in
 
-if(file_exists($file_name)){
-	// file exists, grab contents so we can rewrite
-	$posts_text = file_get_contents($file_name);
-} else {
-	// file doesnt exist, begin by creating a new file
-	$posts_text = '';
-}// end if the file exists
-
-$posts_data = explode("\n", $posts_text);
-$id = 0;
-
-foreach($posts_data as $post){
-	$post = json_decode($post, true);
-	
-	if($post['id'] > $id){
-		$id = $post['id'] + 1;
-	}// end if find the highest id in the file
-	
-}// end foreach loop for finding the highest id in the file
+if(get_value('id', $_SESSION) === NULL){
+	$_SESSION['id'] = 0;
+}// end if session id is not set, set it now
 
 #######################
 ####  HTML SECTION ####
@@ -45,26 +29,51 @@ foreach($posts_data as $post){
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
 <title>View Posts</title>
-<h1>Posts</h1>
-<p>Currently logged in as: <?=$username?></p>
-<div id="posts_table"></div>
-<br>
-<br>
-<button id="button" type="button">Make a Post</button>
-<br>
-<br>
-<br>
-<a href="logout.php">Logout</a>
+<table id="main_table" width="45%">
+<tr>
+	<td>
+		<h1>View Posts</h1> 
+	</td>
+	<td>
+		<center><a href="logout.php"><button>Logout</button></a></center>
+	</td>
+	<tr>
+		<td>
+			Welcome <?=$username?>!
+		</td>
+	</tr>
+	<tr>
+		<td>
+			Note: HTML is allowed when creating posts.
+		</td>
+	</tr>
+	<tr>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td><div id="posts_table"></div></td>
+	</tr>
+	<tr>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td>
+			<button id="post" type="button">Create a Post</button>&nbsp;&nbsp;
+			<button id="message" type="button">Send a Message</button>
+		</td>
+		<td>
+	</tr>	
+</table>
 
 <div id="dialog-form">
     <form onsubmit="return false;">
-		<input type="hidden" id="post_id" value="<?= $id ?>">
-		<label for="post_title">Title:</label>
+		
+		<label id="title" for="post_title">Title:</label>
 		<br>
 		<input size="30" type="text" id="post_title" name="post_title" class="text ui-widget-content ui-corner-all"></textarea>
 		<br>
 		<br>
-        <label for="name">Content:</label>
+        <label id="content" for="name">Content:</label>
 		<br>
 		<textarea rows="7" cols="45" id="post_content" name="post_content" class="text ui-widget-content ui-corner-all"></textarea>
     </form>
@@ -84,46 +93,68 @@ $( document ).ready(function() {
 		modal: true,
 		width: 400,
 		height: 360,
-		buttons: {
-			"Post": function() {
-
-				if($('#post_title').val() == ''){
-					alert('Post title cannot be blank.');
-				}else if($('#post_content').val() == ''){
-					alert('Post content cannot be blank');
-				}else{
-					updatePosts('update');
-					$(this).dialog("close");
-				}
-			},
-			"Cancel": function() {
-				$(this).dialog("close");
-			}
-		}
+		buttons:
+            [
+              {
+                  text: "Post",
+				  id: "ok",
+                  click: function() {
+					  
+                    if($('#post_title').val() == ''){
+						if($('#ok').button('option', 'label') == 'Post'){
+							alert('Title cannot be blank.');
+						}else{
+							alert('Reciever cannot be blank.');
+						}	
+					}else if($('#post_content').val() == ''){
+						alert('Content cannot be blank');
+					}else{
+						updatePosts('update');
+						$(this).dialog("close");
+					}
+                  }
+              },
+			  {
+                  text: "Cancel",
+                  click: function() {
+                    $(this).dialog("close");
+                  }
+              }              
+           ]
 	});
 	
 	updatePosts('');
 	eval(document.getElementById('ajax_js').innerHTML);
 });
 
-$('#button').click(function() {
+$('#post').click(function() {
    $('#dialog-form').dialog('option', 'title', 'Create a Post');
+   $('#title').html('Title:');
+   $('#content').html('Content:');
+   $('#ok').button('option', 'label', 'Post');
+   
    $('#post_title').val('');
    $('#post_content').val('');
-   $( "#dialog-form" ).dialog( "open" );
+   $("#dialog-form").data('action', 'post').dialog("open");
 });
 
-function updatePosts(action){
+$('#message').click(function() {
+   $('#dialog-form').dialog('option', 'title', 'Send a Message');
+   $('#title').html('Receiver:');
+   $('#content').html('Body:');
+   $('#ok').button('option', 'label', 'Send');
+   
+   $('#post_title').val('');
+   $('#post_content').val('');
+   $("#dialog-form").data('action', 'message').dialog("open");
+});
+
+function updatePosts(ajx_action){
+	var action = $("#dialog-form").data('action');
 	
-	if(action == 'delete'){
-		// action is a delete
+	if(ajx_action == 'delete' || action == 'edit'){
+		// action is a delete or an edit, use the id from the clicked cell
 		var post_id = this.id
-	}else if(typeof this.id != 'undefined'){
-		// action is an edit
-		var post_id = this.id;
-	}else{
-		// action is a create
-	    var post_id = parseInt(document.getElementById('post_id').value);
 	}
 	
 	var post_title = $('#post_title').val();
@@ -134,7 +165,7 @@ function updatePosts(action){
 	today = Date.parse(today) / 1000;
 	
 	// perform the actual ajax call
-	$.get( "updatePosts.php", { ajax_action: action, title: post_title, content: post_content, user: username, date: today, id: post_id }, function(data){
+	$.get( "updatePosts.php", { ajax_action: ajx_action, title: post_title, content: post_content, user: username, date: today, id: post_id }, function(data){
 		// this function is called after a successfull ajax request
 		// in this case `data` is our html table after updating the posts file
 
@@ -145,16 +176,7 @@ function updatePosts(action){
 		}
 		eval(document.getElementById('ajax_js').innerHTML);
 	});
-		
-	// reset the forms message
-	$('#post_title').val('');
-	$('#post_content').val('');
-	
-	if(action != 'delete' && typeof this.id == 'undefined' && action != ''){
-		// action is a create, increment post id
-		$('#post_id').val(post_id + 1);
-	}
-	
+				
 }// end function for updating posts
 
 </script>
