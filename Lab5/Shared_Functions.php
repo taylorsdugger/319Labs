@@ -47,7 +47,7 @@ function rsa_decrypt($string, $private_key)
 }
 
 function get_key($username, $type){
-	// first grab the recievers public key by reading from the file
+	// function for getting the public or private key for the $username
 	$users_name = 'users.txt';
 	$users_text = file_get_contents($users_name);
 	$users_data = explode("\n", $users_text);

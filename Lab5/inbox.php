@@ -14,10 +14,10 @@ if($ajax_action == 'view'){
 		$messages_text = file_get_contents($file_name);
 	}else{
 		$messages_text = '';
-	}
+	}// end if file exists
 	
-	
-	$messages_data = explode("\n", $messages_text);
+	// weird ass encryption = weird ass delimiter between objects
+	$messages_data = explode("???????????\n", $messages_text);
 	$messages = array();
 	
 	foreach($messages_data as $message){

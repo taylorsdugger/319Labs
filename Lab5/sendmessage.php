@@ -42,7 +42,8 @@ if($ajax_action == 'send'){
 	}// end if our posts file exists
 	
 	// serialize instead of using json because this data contains encrypted/unsupported characters
-	$file_contents .= serialize($data) . "\n";
+	// weird ass encryption = weird ass delimiter between objects
+	$file_contents .= serialize($data) . "???????????\n";
 	
 	file_put_contents($messages_name, $file_contents);
 }// end if ajax action == send

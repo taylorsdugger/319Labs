@@ -137,6 +137,7 @@ $( document ).ready(function() {
 			  {
                   text: "Cancel",
                   click: function() {
+					$("#dialog-form").data('action', '');
                     $(this).dialog("close");
                   }
               }              
@@ -191,7 +192,7 @@ function updatePosts(ajx_action){
 			$("#dialog-form").data('action', '');
 		}
 	}
-
+	
 	if(ajx_action == 'delete' || action == 'edit'){
 		// action is a delete or an edit, use the id from the clicked cell
 		var post_id = this.id
@@ -205,7 +206,6 @@ function updatePosts(ajx_action){
 	
 	var post_content = $('#post_content').val();	
 	
-	
 	var today = new Date();
 	today = Date.parse(today) / 1000;
 	
@@ -216,6 +216,7 @@ function updatePosts(ajx_action){
 			if(data == -1){
 				alert("Message failed. Receiver is not a valid user.");
 				$("#dialog-form").data('action', 'message').dialog("open");
+				$("#dialog-form").data('action', '');
 			}else{				
 				alert('Message has been sent.');
 				viewInbox();
@@ -266,8 +267,10 @@ function viewInbox(){
 }// end function for viewing the inbox
 
 </script>
-
 <?php
+#######################
+####  PHP FUNCTIONS  ##
+#######################
 
 function get_users_html(){
 	// create a selection box for the users in our users.txt file, this is used for sending messages
