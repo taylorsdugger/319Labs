@@ -45,7 +45,7 @@ if($ajax_action == 'view'){
 		foreach($messages as $message){
 			$content = rsa_decrypt($message['body'], $private_key);
 ?>			
-		<table border="1" width="45%">
+		<table border="1" width="100%">
 		<tr>
 			<td>Sent by: <?= $message['sender'] ?></td>
 		<tr>

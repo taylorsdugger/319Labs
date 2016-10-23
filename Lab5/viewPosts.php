@@ -29,22 +29,20 @@ if(get_value('id', $_SESSION) === NULL){
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
 <title>View Posts</title>
-<table id="main_table" width="45%">
-<tr>
+<table width="45%">
+	<tr>
 	<td>
-		<h1>Dashboard</h1> 
-	</td>
-	<td>
-		<center><a href="logout.php"><button>Logout</button></a></center>
-	</td>
-<?php
-   if($username != 'admin'){	
-?>	<td>
-		<input type="button" id="inbox" onclick="viewInbox(); return false;" value="Inbox">
-	</td>
+		<h1>Dashboard &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="logout.php"><button>Logout</button></a>&nbsp;&nbsp;<input type="button" id="inbox" onclick="viewInbox(); return false;" value="Inbox"></h1> 
+		
+		<?php
+		if($username != 'admin'){	
+?>		
+			
 <?php
    }// end if username == 'admin'
-?>   
+?>  
+	</td>
+	</tr>
 	<tr>
 		<td>
 			Welcome <?=$username?>!
@@ -61,7 +59,7 @@ if(get_value('id', $_SESSION) === NULL){
 	</tr>
 	<tr>
 		<td>
-			<button id="post" type="button">Create a Post</button>&nbsp;&nbsp;
+			<button id="post" type="button">Create a Post</button>
 <?php
 	if($username != 'admin'){
 ?>			
