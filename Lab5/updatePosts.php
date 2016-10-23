@@ -225,6 +225,9 @@ function get_max_id($file_name){
 			$('#post_title').val(title);
 			$('#post_content').val(content.substring(0, content.length-1));
 			$('#dialog-form').dialog('option', 'title', 'Edit a Post');
+			document.getElementById('post_title').style.display = '';
+			document.getElementById('users_selection').style.display = 'none';
+			document.getElementById('extra_spc').style.display = '';
 			
 			$('#title').html('Title:');
 			$('#content').html('Content:');

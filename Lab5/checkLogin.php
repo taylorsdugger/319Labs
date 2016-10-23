@@ -22,9 +22,9 @@ if($ajax_action == 'check'){
 		// we have a users file
 		while (($line = fgets($users_file)) !== false) {
 			// loop over all users in users.txt
-			$line = json_decode($line);
+			$line = json_decode($line, true);
 			
-			if($line[0] == $username && $line[1] == $password){
+			if($line['username'] == $username && $line['password'] == $password){
 				$has_access = true;
 			}// end if they should be granted access
 			

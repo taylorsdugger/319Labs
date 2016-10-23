@@ -2,11 +2,7 @@
 #######################
 ####### INCLUDES ######
 #######################
-
 include_once('Shared_Functions.php');
-$path = 'phpseclib';
-set_include_path(get_include_path() . PATH_SEPARATOR . $path);
-include_once('Crypt/RSA.php');
 
 #######################
 ###  PHP POST-FORM   ##
@@ -25,7 +21,7 @@ if($action == 'add_user'){
 	$rsa = new Crypt_RSA();
 	$rsa->setPrivateKeyFormat(CRYPT_RSA_PRIVATE_FORMAT_PKCS1);
 	$rsa->setPublicKeyFormat(CRYPT_RSA_PUBLIC_FORMAT_PKCS1);
-	extract($rsa->createKey(16));
+	extract($rsa->createKey(512));
 	
 	if(file_exists($file_name)){
 		// file exists, grab contents so we can rewrite
@@ -37,10 +33,10 @@ if($action == 'add_user'){
 	
 	// store all of our data in a php array
 	$user_data = array();
-	$user_data[] = $username;
-	$user_data[] = $password;
-	$user_data[] = $publickey;
-	$user_data[] = $privatekey;
+	$user_data['username'] = $username;
+	$user_data['password'] = $password;
+	$user_data['pub_key'] = $publickey;
+	$user_data['priv_key'] = $privatekey;
 	
 	// json encode the data before we store in our .txt file
 	$user_text .= json_encode($user_data) . "\n";
