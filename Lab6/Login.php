@@ -3,7 +3,7 @@ session_start();
 #######################
 ####### DATABASE ######
 #######################
-$conn = mysqli_connect("localhost", "root", "toor", "lab6");
+$conn = mysqli_connect("mysql.cs.iastate.edu", "dbu319t34", '6$KeyEqe', "db319t34");
 
 if (mysqli_connect_errno()) {
     printf("Connect failed: %s\n", mysqli_connect_error());
@@ -31,7 +31,6 @@ if($ajax_action == 'check_login'){
 	if(mysqli_num_rows($query) > 0){
 		// they have access
 		$_SESSION['username'] = $username;
-		echo '1';
 	}else{
 		// they dont have access
 		echo '-1';
@@ -85,7 +84,7 @@ Need an account? <a href="Signup.php">Click here</a> to signup.
 			 
 			function(data){
 				// ajax success function, attempted to sign a user up
-				if(data == '1'){
+				if(data == ''){
 					window.location = "portal.php";
 				}else{
 					document.getElementById('error').innerHTML = "The username and password don't match a user in our database.";

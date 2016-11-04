@@ -2,7 +2,7 @@
 #######################
 ####### DATABASE ######
 #######################
-$conn = mysqli_connect("localhost", "root", "toor", "lab6");
+$conn = mysqli_connect("mysql.cs.iastate.edu", "dbu319t34", '6$KeyEqe', "db319t34");
 
 if (mysqli_connect_errno()) {
     printf("Connect failed: %s\n", mysqli_connect_error());
@@ -94,9 +94,6 @@ if($ajax_action == 'add_user'){
 				$librarian_sql . 
 				"FirstName = '".mysqli_real_escape_string($conn, get_value('first_name'))."',
 				LastName = '".mysqli_real_escape_string($conn, get_value('last_name'))."'");
-				
-		// echo a 1 means this add was successful
-		echo '1';
 	}else{
 		echo $error;
 	}// end if we still dont have an error
@@ -191,7 +188,7 @@ function signup() {
 						  }, 
 		function(data){
 			// ajax success function, attempted to sign a user up
-			if(data == '1'){
+			if(data == ''){
 				window.location = "login.php";
 			}else{
 				document.getElementById('error').innerHTML = data;
