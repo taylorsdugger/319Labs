@@ -92,7 +92,7 @@ if($ajax_action == 'add_user'){
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js" xmlns:Name="http://www.w3.org/1999/xhtml"></script>
 
 <title>Signup - Welcome</title>
-<h1>Private File Storage Registration Form</h1>
+<h1>File Storage Registration Form</h1>
 
 <strong><p id="error"></p></strong>
 
@@ -121,7 +121,7 @@ if($ajax_action == 'add_user'){
 </tr>
 <tr>
 	<td><label for="admin">Admin:</label></td>
-	<td><input id="admin" type="checkbox" name="admin" value="1" <?= (get_value('admin') != NULL) ? 'checked' : '' ?>> &nbsp;&nbsp; (Admins have unlimited storage and can edit user's max file capacities)</td>
+	<td><input id="admin" type="checkbox" name="admin" value="1" <?= (get_value('admin') != NULL) ? 'checked' : '' ?>> &nbsp;&nbsp; (Admins have unlimited storage)</td>
 	
 </tr>
 <tr>

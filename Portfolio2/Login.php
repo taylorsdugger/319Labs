@@ -46,7 +46,7 @@ if($ajax_action == 'check_login'){
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js" xmlns:Name="http://www.w3.org/1999/xhtml"></script>
 
 <title>Login - Welcome</title>
-<h1>Private File Storage Login</h1>
+<h1>File Storage Login</h1>
 
 <strong><p id="error"></p></strong>
 
@@ -75,21 +75,21 @@ Need an account? <a href="Signup.php">Click here</a> to signup.
 
 <!-- JAVASCRIPT -->
 <script>
-	function checklogin(){
-		
-		$.post( "Login.php", { ajax_action: 'check_login', 
-							   username: $("#username").val(), 
-							   password: $("#password").val()
-							 },
-			 
-			function(data){
-				// ajax success function, attempted to sign a user up
-				if(data == ''){
-					window.location = "portal.php";
-				}else{
-					document.getElementById('error').innerHTML = "The username and password don't match a user in our database.";
-				}
+function checklogin(){
+	
+	$.post( "Login.php", { ajax_action: 'check_login', 
+						   username: $("#username").val(), 
+						   password: $("#password").val()
+						 },
+		 
+		function(data){
+			// ajax success function, attempted to sign a user up
+			if(data == ''){
+				window.location = "portal.php";
+			}else{
+				document.getElementById('error').innerHTML = "The username and password don't match a user in our database.";
 			}
-		);
-	}
+		}
+	);
+}
 </script>
